@@ -4,8 +4,27 @@ import urllib2
 
 
 def merge(request):
+    """
+    View that returns results from merged streams
+    :param request:
+    :return:
+        {
+            "last": <previous merged stream value>
+            "current": <current merged stream value>
+        }
+    """
 
     def get_current_stream_item(stream_name):
+        """
+        Retrieves stream info
+        :param stream_name:
+        :return:
+            {
+                "last": <last stream value>
+                "current": <current stream value>
+                "stream": <stream name>
+            }
+        """
         _req = urllib2.Request('https://api.pelotoncycle.com/quiz/next/'+stream_name)
         _req.add_header('Content-Type', 'application/json')
         con = urllib2.urlopen(_req)
@@ -15,6 +34,19 @@ def merge(request):
         return content
 
     def merge_streams(stream1, stream2):
+        """
+        Sorts "last" and "current" stream values and returns updated
+        "last" and "current" values of the merged stream.
+
+        http://localhost:8000/quiz/merge?stream1=<stream_name_1>&stream2=<stream_name_2>
+        :param stream1:
+        :param stream2:
+        :return:
+            {
+                "last": 2,
+                "current": 4,
+            }
+        """
         container = []
         content = {}
         s_1 = get_current_stream_item(stream1)
